@@ -1,5 +1,6 @@
 # Insert a node at the head of a linked list
 
+
 #!/bin/python3
 
 import math
