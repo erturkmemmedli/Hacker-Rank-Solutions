@@ -1,5 +1,6 @@
 # Dynamic Array
 
+
 #!/bin/python3
 
 import math
