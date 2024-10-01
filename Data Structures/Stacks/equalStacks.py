@@ -1,6 +1,3 @@
-# Equal Stacks
-
-
 #!/bin/python3
 
 import math
@@ -35,7 +32,7 @@ def equalStacks(h1, h2, h3):
             c -= h3[k]
             k += 1
         
-    return a
+    return min(a, b, c)
 
 if __name__ == '__main__':
     fptr = open(os.environ['OUTPUT_PATH'], 'w')
