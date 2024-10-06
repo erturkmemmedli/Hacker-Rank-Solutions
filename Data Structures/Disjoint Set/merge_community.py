@@ -1,6 +1,3 @@
-# Merging Communities
-
-
 # Enter your code here. Read input from STDIN. Print output to STDOUT
 
 class UnionFind:
@@ -42,16 +39,6 @@ def merge_community(n, queries):
         else:
             parent = uf.find(int(query[1]) - 1)
             print(uf.size[parent])
-
-
-def search_parents(uf, n, parent):
-    count = 0
-    
-    for i in range(n):
-        if uf.find(i) == parent:
-            count += 1
-        
-    return count
 
 
 if __name__ == '__main__':
