@@ -1,4 +1,4 @@
-// Electronics Shop
+# Electronics Shop
 
 
 #!/bin/python3
