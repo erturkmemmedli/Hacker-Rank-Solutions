@@ -34,11 +34,13 @@ class Result {
         List<Integer> result = new ArrayList<>();
         result.add(sum);
         
+        if (a == b) return result;
+        
         for (int i = 1; i < n; i++) {
             sum += max - min;
             result.add(sum);
         }
-        
+        System.out.println(result);
         return result;
     }
 
