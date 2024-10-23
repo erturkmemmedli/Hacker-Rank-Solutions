@@ -76,7 +76,6 @@ if __name__ == '__main__':
 
 
 # Following Aho Corasick Algortihm results in TlE.
-
 import math
 import os
 import random
@@ -218,3 +217,161 @@ if __name__ == '__main__':
         
     health = dna_health(genes, health, strands)
     print(*health)
+
+
+# Only one test case failing Aho Corasick Algorithm
+import bisect
+from collections import defaultdict
+import sys
+
+# https://www.hackerrank.com/challenges/determining-dna-health
+
+
+class TreeNode:
+    __slots__ = (
+        "is_dictionary_node",
+        "longest_suffix",
+        "dict_suffix",
+        "children",
+        "health",
+        "health_calculated",
+        "gene_number",
+        "gene_health",
+    )
+
+    def __init__(self):
+        # Aho-Corasick Trie
+        self.is_dictionary_node = False
+        self.children = defaultdict(TreeNode)
+        # Health Data
+        self.health_calculated = False
+
+
+health_tree_root = TreeNode()
+calculated_dictionary_nodes = []
+
+
+def find_suffix_nodes():
+    _health_tree_root = health_tree_root
+    _health_tree_root.longest_suffix = None
+    _health_tree_root.dict_suffix = None
+
+    health_nodes = [_health_tree_root]
+
+    for health_node in health_nodes:
+        for child_gene_char in health_node.children:
+            child_health_node = health_node.children[child_gene_char]
+            # Suffix Node
+            suffix_node = health_node.longest_suffix
+            while suffix_node and child_gene_char not in suffix_node.children:
+                suffix_node = suffix_node.longest_suffix
+            child_health_node.longest_suffix = (
+                suffix_node.children[child_gene_char]
+                if suffix_node and child_gene_char in suffix_node.children
+                else _health_tree_root
+            )
+            # Dict Node
+            suffix_node = child_health_node.longest_suffix
+            if suffix_node:
+                if suffix_node.is_dictionary_node:
+                    child_health_node.dict_suffix = suffix_node
+                else:
+                    child_health_node.dict_suffix = suffix_node.dict_suffix
+            # Children
+            health_nodes.append(child_health_node)
+
+
+def create_tree():
+    _ = input()  # n that we don't use
+    _health_tree_root = health_tree_root
+    health_node = _health_tree_root
+
+    def get_gene_health():
+        for gene_health in input().split(" "):
+            yield int(gene_health)
+
+    genes = input().split(" ")
+    get_gene_health = get_gene_health()
+    gene_number = 0
+    for gene in genes:
+        health_node = _health_tree_root
+        for gene_char in gene:
+            health_node = health_node.children[gene_char]
+        gene_health = next(get_gene_health)
+        try:
+            health_node.gene_number.append(gene_number)
+            health_node.gene_health.append(gene_health)
+        except AttributeError:
+            health_node.is_dictionary_node = True
+            health_node.gene_number = [gene_number]
+            health_node.gene_health = [gene_health]
+        gene_number += 1
+
+
+def match_search(first, last, strand):
+    total = 0
+    _health_tree_root = health_tree_root
+    _calculated_dictionary_nodes = calculated_dictionary_nodes
+    health_node = _health_tree_root
+
+    for strand_char in strand:
+        while (health_node != _health_tree_root) and (
+            strand_char not in health_node.children
+        ):
+            health_node = health_node.longest_suffix
+
+        if strand_char in health_node.children:
+            health_node = health_node.children[strand_char]
+            dict_node = (
+                health_node
+                if health_node.is_dictionary_node
+                else health_node.dict_suffix
+            )
+            while dict_node and dict_node != _health_tree_root:
+                if not dict_node.health_calculated:
+                    health = 0
+                    first_health = max(
+                        bisect.bisect_left(dict_node.gene_number, first), 0
+                    )
+                    last_health = bisect.bisect_right(dict_node.gene_number, last)
+                    health = sum(dict_node.gene_health[first_health:last_health])
+                    dict_node.health_calculated = True
+                    dict_node.health = health
+                    _calculated_dictionary_nodes.append(dict_node)
+
+                total += dict_node.health
+                dict_node = dict_node.dict_suffix
+
+    for node in _calculated_dictionary_nodes:
+        node.health_calculated = False
+
+    _calculated_dictionary_nodes.clear()
+
+    return total
+
+
+if __name__ == "__main__":
+    create_tree()
+
+    find_suffix_nodes()
+
+    s = int(input().strip())
+
+    # strands = []
+    total_min = sys.maxsize
+    total_max = 0
+
+    for s_itr in range(s):
+        first_multiple_input = input().rstrip().split()
+
+        first = int(first_multiple_input[0])
+        last = int(first_multiple_input[1])
+        strand = first_multiple_input[2]
+
+        total = match_search(first, last, strand)
+        if total > total_max:
+            total_max = total
+        if total < total_min:
+            total_min = total
+
+    print(total_min, total_max)
