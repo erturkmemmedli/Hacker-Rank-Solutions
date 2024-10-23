@@ -1,6 +1,79 @@
 # Determining DNA Health
 
 
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+
+from collections import defaultdict 
+from bisect import bisect_left, bisect_right
+
+def dHealth(first, last, largest, d, geneDict, subStrs): 
+    result = 0
+    for item in range(len(d)):
+        #we only need to check sub-strings if they are smaller or 
+        #equal to the size of the largest sub string in geneDict
+        for subItem in range(1, largest+1): 
+             #break if we would go over the last character in the string
+            if item+subItem > len(d):
+                break
+            #our range for subItem is 1 to largest+1, because this does not include the end index.
+            subStr = d[item:item+subItem] 
+            #the set subStrs includes partial matches, so if our current subStr 
+            #is not in subStrs, then we know no larger subStr will be in geneDict. 
+            #It is much faster to search a set than the dict.
+            if subStr not in subStrs:
+                break 
+            if subStr not in geneDict:
+                continue
+            genes = geneDict[subStr][0]
+            healthScores = geneDict[subStr][1]
+            #bisect right gives us the total value of all the matches in geneDict, up to our last value. 
+            #bisect left gives us the total value of all the matches before our first value.
+            result += healthScores[bisect_right(genes, last)] - healthScores[bisect_left(genes, first)]
+    return result 
+
+if __name__ == '__main__': 
+    n = int(input())
+    genes = input().rstrip().split()
+    health = list(map(int, input().rstrip().split()))
+    s = int(input())
+    
+    #defaultdict is just like a dictionary, except it will not raise a KeyError, 
+    #and provides a default value for keys that do not exist.
+    geneDict = defaultdict(lambda: [[],[0]]) 
+    subStrs = set()
+
+    for item in range(len(genes)):
+        geneDict[genes[item]][0].append(item)
+        for i in range(1, len(genes[item])+1):
+            #our range for i is 1 to len(genes[item]+1, because this does not include the end index.
+            subStrs.add(genes[item][:i]) 
+
+    for item in geneDict.values():
+        for i in range(len(item[0])):
+            #This builds a list of ascending values when there are multiple instances of the same gene.
+            item[1].append(item[1][i] + health[item[0][i]]) 
+
+    largest = max(map(len, genes))
+    minR = math.inf
+    maxR = 0
+
+    for s_itr in range(s):
+        firstLastd = input().split()
+        first = int(firstLastd[0])
+        last = int(firstLastd[1])
+        d = firstLastd[2]
+        result = dHealth(first, last, largest, d, geneDict, subStrs)
+        minR = min(minR, result)
+        maxR = max(maxR, result)
+
+    print(minR, maxR)
+
 
 # Following Aho Corasick Algortihm results in TlE.
 
