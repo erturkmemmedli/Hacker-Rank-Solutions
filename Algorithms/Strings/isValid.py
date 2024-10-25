@@ -38,11 +38,17 @@ def isValid(s):
             cnt2 += 1
         else:
             return "NO"
-            
-    return "YES" if (cnt1 == 1 or cnt2 == 1) and abs(val1 - val2) == 1 else "NO"
+    
+    if val2 == None:
+        return "YES" 
+    if (cnt1 == 1 or cnt2 == 1) and abs(val1 - val2) == 1:
+        return "YES" 
+    if (val1 == 1 and cnt1 == 1) or (val2 == 1 and cnt2 == 1):
+        return "YES" 
+    else:
+        return "NO"
     
     
-
 if __name__ == '__main__':
     fptr = open(os.environ['OUTPUT_PATH'], 'w')
 
