@@ -19,33 +19,48 @@ import sys
 #  3. INTEGER k
 #
 
+from collections import deque
+
 def highestValuePalindrome(s, n, k):
     # Write your code here
     string = [char for char in s]
     i, j = 0, n - 1
-    indices = []
+    indices = deque()
+    priorities = []
     
     while i < j and k >= 0:
         if int(s[i]) != int(s[j]):
-            indices.append((i, j))
-        i, j = i + 1, j - 1
+            if s[i] == '9' or s[j] == '9':
+                priorities.append((i, j))
+            else:
+                indices.append((i, j))
+        i += 1
+        j -= 1
     
-    if len(indices) > k:
+    if len(indices) + len(priorities) > k:
         return '-1'
         
-    while len(indices) * 2 > k:
-        a, b = indices.pop()
+    while priorities:
+        a, b = priorities.pop()
         k -= 1
-        string[a], string[b] = max(s[a], s[b]), max(s[a], s[b])
+        string[a] = string[b] = '9'
     
-    i, count = 0, k // 2
-    while i < n // 2 and count > 0:
-        if string[i] != '9' or string[-i - 1] != '9':
-            string[i] = '9'
-            string[-i - 1] = '9'
-            count -= 1
-        i += 1
-        
+    i = 0
+    while i < n // 2 and (k > 1 or (k > 0 and indices)):
+        if string[i] == '9':
+            i += 1
+            continue
+        if len(indices) * 2 <= k:
+            if indices and indices[0][0] == i:
+                a, b = indices.popleft()
+            string[i] = string[-i - 1] = '9'
+            k -= 2
+            i += 1
+        else:
+            a, b = indices.pop()
+            string[a] = string[b] = max(s[a], s[b])
+            k -= 1
+    
     if k % 2 == 1 and n % 2 == 1:
         string[n // 2] = '9'
         
