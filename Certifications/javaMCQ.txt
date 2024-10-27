@@ -1,0 +1,99 @@
+1. Java: Static Analysis
+
+public class Test {
+    public static void main(String[] args){
+        int i = 010;
+        int j = 07;
+        System.out.println(i);
+        System.out.println(j);
+    }
+}
+
+A) 8 7
+B) 10 7
+C) Compilation fails with an error at line 3
+D) Compilation fails with an error at line 5
+
+Answer: A
+
+
+
+2: Java: Print a Sum
+
+public  class A {
+    int add(int i, int j){
+        return i+j;
+    }
+}
+public class B extends A{
+    public static void main(String argv[]){   
+        short s = 9;
+        System.out.println(add(s,6));
+   }
+}
+
+A) Compilation fails due to an error on line 2
+B) Compilation fails due to error an on line 9, non-static method referenced from a static context.
+C) Compilation fails due to a type mismatch on line 9.
+D) 15
+
+Answer: B
+
+
+
+3. Java: Comment
+
+A) /* Here is a comment **** */
+B) /* This is also a comment /* More comments */ */
+C) /* This is also a comment // More comments */
+D) // /* This is a // // comment */
+
+Answer: B
+
+
+
+4. Java: Thread Analysis
+
+class SampleDemo implements Runnable {
+
+   private Thread t;
+   private String threadName;
+   
+   SampleDemo (String threadName){
+       this.threadName = threadName;
+   }
+
+   public void run() 
+   {
+       while (true)
+            System.out.print(threadName);
+   }
+
+   public void start ()
+   {
+      if (t == null)
+      {
+         t = new Thread (this, threadName);
+         t.start ();
+      }
+   }
+}
+
+public class TestThread {
+
+   public static void main(String args[]) {
+
+      SampleDemo A = new SampleDemo( "A");
+      SampleDemo B = new SampleDemo( "B");
+
+      B.start();
+      A.start();
+   }
+}
+
+A) ABABABAB...(pattern repeats).
+B) BABABABA...(pattern repeats).
+C) AABAABAA...(pattern repeats).
+D) A pattern cannot be predicted and can vary each time the program is run.
+
+Answer: D
