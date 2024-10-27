@@ -1,0 +1,8 @@
+Which of the following data structures can handle updates and queries in log(n) time on an array?
+
+A) Linked list
+B) Stack
+C) Segment Tree
+D) Queue
+
+Answer: C
