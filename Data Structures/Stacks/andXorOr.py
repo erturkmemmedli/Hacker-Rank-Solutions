@@ -1,6 +1,3 @@
-# AND xor OR
-
-
 #!/bin/python3
 
 import math
@@ -20,7 +17,18 @@ def andXorOr(a):
     # Write your code here
     stack = []
     res = 0
+    
+    '''
+    Truth Table:
+      a   b   a^b   a&b   a|b    (a&b)^(a|b)
+    | 0 | 0 |  0  |  0  |  0  |       0      |
+    | 0 | 1 |  1  |  0  |  1  |       1      |
+    | 1 | 0 |  1  |  0  |  1  |       1      |
+    | 1 | 1 |  0  |  1  |  1  |       0      |
 
+    So, (a&b)^(a|b) = a^b
+    '''
+  
     for val in a:
         while stack:
             res = max(res, val ^ stack[-1])
