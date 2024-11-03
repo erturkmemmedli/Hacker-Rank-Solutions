@@ -891,6 +891,30 @@ def runningMedian(a):
         result.append(float(sl[n//2]) if n % 2 == 1 else (sl[n//2-1]+sl[n//2])/2)
         
     return result
+
+
+from heapq import heappush, heappop
+
+def runningMedian_alternative(a):
+    # Write your code here
+    min_heap = []
+    max_heap = []
+    result = []
+    
+    for num in a:
+        if not max_heap or num < -max_heap[0]:
+            heappush(max_heap, -num)
+        else:
+            heappush(min_heap, num)
+        
+        if len(max_heap) > len(min_heap)+1:
+            heappush(min_heap, -heappop(max_heap))
+        elif len(min_heap) > len(max_heap):
+            heappush(max_heap, -heappop(min_heap))
+            
+        result.append(-max_heap[0] if len(max_heap) != len(min_heap) else (min_heap[0]-max_heap[0])/2)
+       
+    return result
     
 
 if __name__ == '__main__':
