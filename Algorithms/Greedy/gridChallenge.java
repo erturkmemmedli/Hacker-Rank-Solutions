@@ -24,7 +24,6 @@ class Result {
 
     public static String gridChallenge(List<String> grid) {
         // Write your code here
-        Collections.sort(grid);
         int n = grid.size();
         int m = grid.get(0).length();
         
@@ -36,7 +35,6 @@ class Result {
             Arrays.sort(str);
             grid.set(i, String.valueOf(str));
         }
-        System.out.println(grid);
         
         for (int i = 0; i < m; i++) {
             for (int j = 1; j < n; j++) {
