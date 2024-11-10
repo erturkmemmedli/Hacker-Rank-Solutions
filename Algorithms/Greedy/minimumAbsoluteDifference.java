@@ -1,4 +1,4 @@
-# Minimum Absolute Difference in an Array
+// Minimum Absolute Difference in an Array
 
 
 import java.io.*;
