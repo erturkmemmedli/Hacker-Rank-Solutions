@@ -1,4 +1,4 @@
-# Grid Challenge
+// Grid Challenge
 
 
 import java.io.*;
@@ -24,8 +24,20 @@ class Result {
 
     public static String gridChallenge(List<String> grid) {
         // Write your code here
+        Collections.sort(grid);
         int n = grid.size();
         int m = grid.get(0).length();
+        
+        for (int i = 0; i < n; i++) {
+            char[] str = new char[m];
+            for (int j = 0; j < m; j++) {
+                str[j] = grid.get(i).charAt(j);
+            }
+            Arrays.sort(str);
+            grid.set(i, String.valueOf(str));
+        }
+        System.out.println(grid);
+        
         for (int i = 0; i < m; i++) {
             for (int j = 1; j < n; j++) {
                 if (grid.get(j).charAt(i) < grid.get(j - 1).charAt(i)) {
