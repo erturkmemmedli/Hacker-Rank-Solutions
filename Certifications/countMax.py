@@ -8,9 +8,12 @@ import random
 import re
 import sys
 
+#
 # Complete the 'countMax' function below.
+#
 # The function is expected to return a LONG_INTEGER.
 # The function accepts STRING_ARRAY upRight as parameter.
+#
 
 def countMax(upRight):
     # Write your code here
